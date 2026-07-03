@@ -7,7 +7,9 @@ public class Sensor {
     public String localizacao;
     public String sensores;
 
-    public sensor(int id,String codigo,String tipo,String localizacao,String sensores){
+   public Sensor(){}
+
+    public Sensor(int id,String codigo,String tipo,String localizacao,String sensores){
         this.id =id;
         this.codigo=codigo;
         this.tipo=tipo;

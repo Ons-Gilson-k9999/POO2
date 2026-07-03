@@ -13,14 +13,15 @@ import java.sql.ResultSet;
 
 public class MedicaoDAO {
     public void cadastrar(Medicao medicao){
-        String sql= "INSERT INTO sensor"+"(valor,unidade,DataHora,sensor)"+"(VALUES ?,?,?,?)";
+        String sql= "INSERT INTO medicao (id,valor,unidade,DataHora,sensorId) VALUES (?,?,?,?)";
         try{
             Connection conn = Conexao.conectar();
             PreparedStatement stmt= conn.prepareStatement(sql);
-            stmt.setString(1, medicao.valor());
-            stmt.setString(2, medicao.unidade());
-            stmt.setString(3, medicao.dataHora);
-            stmt.setString(4, medicao.sensor());
+            stmt.setInt(1, medicao.getID());
+            stmt.setString(2, medicao.getValor());
+            stmt.setString(3, medicao.getUnidade());
+            stmt.setString(4, medicao.getDataHora());
+            stmt.setInt(5, medicao.getSensorId());
 
             stmt.executeUpdate();
             stmt.close();
@@ -30,32 +31,40 @@ public class MedicaoDAO {
             e.printStackTrace();
         }
     }
-    public void consultar(String codigo){
-        String sql = "SELECT * FROM sensor WHERE codigo=? ";
+    public Medicao consultar(int Id){
+        String sql = "SELECT * FROM medicao WHERE id=? ";
         try{
             Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1,codigo);
+            stmt.setInt(1,Id);
             ResultSet result= stmt.executeQuery();
             if(result.next()){
-                Medicao sensor = new Sensor();
-                Medicao.setId(result.getInt("id"));
-                Medicao.setValor(result.getString("valor"));
-                Medicao.setUnidade(result.getString("unidade"));
-                Medicao.setDataHora(result.getString("Data e hora"));
-                Medicao.setSensor(result.getString("Sensor:"));
+                Medicao medicao = new Medicao();
+                medicao.setId(result.getInt("id"));
+                medicao.setValor(result.getString("valor"));
+                medicao.setUnidade(result.getString("unidade"));
+                medicao.setDataHora(result.getString("dataHora"));
+                medicao.setSensorId(result.getInt("sensorId"));
+
+                result.close();
+                stmt.close();
+                Conexao.fechar(conn);
             }
+                return null;
+        }catch(SQLException e){
+            e.printStackTrace();
+              return null;
         }
     }
     public boolean existeMedicao(String sensor) {
-        String sql = "SELECT * FROM sensor WHERE codigo =?";
+        String sql = "SELECT * FROM medicao WHERE id =?";
         try {
             Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, "id");
-            ResultSet rs = stmt.executeQuery();
-            boolean existe = rs.next();
-            rs.close();
+            ResultSet result = stmt.executeQuery();
+            boolean existe = result.next();
+            result.close();
             stmt.close();
             conn.close();
             return existe;

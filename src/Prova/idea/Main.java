@@ -1,9 +1,12 @@
 package Prova.idea;
 
-import ProvaGilson.view.TelaEquipamento;
+import Prova.view.TelaMedicao;
+import Prova.view.TelaSensor;
 
 public class Main {
-public static void main (String[] args){
-    new TelaEquipamento();
-}
+    public static void main(String[] args) {
+        new TelaSensor();
+        new TelaMedicao();
+    }
+
 }
